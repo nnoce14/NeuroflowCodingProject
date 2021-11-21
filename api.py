@@ -1,6 +1,7 @@
 import os, time
+from csv import reader
 from flask import Flask, jsonify, g, abort, request, url_for
-from flask_restful import Api, Resource
+from flask_restful import Api, Resource, reqparse
 from flask_httpauth import HTTPBasicAuth
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -14,7 +15,9 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
-moods = []
+moods = [
+        []
+]
 
 # Models
 class User(db.Model):
@@ -38,10 +41,40 @@ def verify_password(username, password):
     g.user = user
     return True
 
+moodParser = reqparse.RequestParser()
+moodParser.add_argument('mood', type=str, help='No mood entered...')
+
 # Endpoints
-@app.route('/api/mood')
+@app.route('/api/mood', methods=['GET'])
+@auth.login_required
 def get_moods():
-    return jsonify({'moods': moods})
+    return jsonify({'moods': get_moods_for_user(g.user)})
+
+def get_moods_for_user(user):
+    if user is None:
+        return "None"
+    else:
+        return parse_moods_by_id(user.id)
+
+def parse_moods_by_id(id):
+    moods = []
+    with open('moods.csv', 'r') as csv_file:
+        csv_reader = reader(csv_file)
+        for row in csv_reader:
+            moods.append(row)
+    return moods
+
+@app.route('/api/mood', methods=['POST'])
+@auth.login_required
+def add_mood():
+    args = moodParser.parse_args()
+    mood = args['mood']
+    if mood is None:
+        return jsonify({'message': 'No mood entered'}), 400
+    else: 
+        
+        return jsonify({'mood': args['mood']}), 201
+
 
 @app.route('/api/users', methods=['POST'])
 def new_user():
@@ -65,7 +98,20 @@ def get_user(id):
         abort(400)
     return jsonify({'username': user.username})
 
+@app.route('/api/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    user = User.query.get(id)
+    if not user:
+        abort(400)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'success': True})
+
 if __name__ == "__main__":
     if not os.path.exists('db.sqlite'):
         db.create_all()
+    if not os.path.exists('moods.csv'):
+        fp = open('moods.csv', 'x')
+        fp.close()
+
     app.run(debug=True)
