@@ -15,9 +15,7 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
-moods = [
-        []
-]
+moods = {}
 
 # Models
 class User(db.Model):
@@ -54,15 +52,17 @@ def get_moods_for_user(user):
     if user is None:
         return "None"
     else:
-        return parse_moods_by_id(user.id)
+        return moods[user.id]
 
-def parse_moods_by_id(id):
-    moods = []
+def add_stored_moods_to_local_moods():
     with open('moods.csv', 'r') as csv_file:
         csv_reader = reader(csv_file)
+        userID = 1;
         for row in csv_reader:
-            moods.append(row)
-    return moods
+            row = rowsplit(",")
+            moods[userID] = [row] if type(row) == str else row
+            print(moods[userID])
+            userID += 1
 
 @app.route('/api/mood', methods=['POST'])
 @auth.login_required
@@ -72,8 +72,8 @@ def add_mood():
     if mood is None:
         return jsonify({'message': 'No mood entered'}), 400
     else: 
-        
-        return jsonify({'mood': args['mood']}), 201
+        moods[g.user.id].append(mood)
+        return jsonify({'mood': mood})
 
 
 @app.route('/api/users', methods=['POST'])
@@ -107,6 +107,13 @@ def delete_user(id):
     db.session.commit()
     return jsonify({'success': True})
 
+def initialize_moods():
+    users = User.query.all()
+    for user in users:
+        if user.id not in moods:
+            moods[user.id] = []
+
+
 if __name__ == "__main__":
     if not os.path.exists('db.sqlite'):
         db.create_all()
@@ -114,4 +121,7 @@ if __name__ == "__main__":
         fp = open('moods.csv', 'x')
         fp.close()
 
+    add_stored_moods_to_local_moods()
+    initialize_moods()
+    print(moods)
     app.run(debug=True)
