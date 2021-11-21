@@ -13,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
 
+moods = []
+
 # Models
 class User(db.Model):
     __tablename__ = 'users'
@@ -36,9 +38,9 @@ def verify_password(username, password):
     return True
 
 # Endpoints
-@app.route('/api', methods=['GET'])
-def hello_world():
-    return jsonify({'data': 'Hello, world!'})
+@app.route('/api/mood', methods=['GET'])
+def get_moods():
+    return jsonify({'moods': moods})
 
 if __name__ == "__main__":
     app.run(debug=True)
