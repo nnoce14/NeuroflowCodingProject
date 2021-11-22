@@ -1,7 +1,7 @@
 NeuroflowCodingProject
 =======================
 
-A simple RESTful API written in Python using Flask and SQLAlchemy.
+A simple REST API written in Python using Flask and SQLAlchemy.
 
 Installation
 ------------
@@ -143,13 +143,13 @@ You can delete a user from the database using the following `curl` command, whic
 Writeup/Disclaimer
 -------
 
-This REST api was built entirely for the purposes of a coding assessment from Neuroflow. It is in no way intended to be used for production services. 
+This REST API was built entirely for the purposes of a coding assessment from Neuroflow. It is in no way intended to be used for production services. 
 
-I would like to share that I had no prior experience with web services and REST APIs before this project. This was my first time using frameworks like Flask and SQLAlchemy. After recieving the assignment from Neuroflow, I spent the first day educating myself on what REST APIs are and how to go about building one in Python. After going through a few tutorials and a lot of documentation, I began working on this project on 11/20 and as I got more comfortable with REST and Flask, I was able to build the specified API a lot faster than I had anticipated, granted that I had no clue what a REST API was three days ago. I haven't done extensive testing on the system, but I've ensured that all of the core funtionality required of the system does and will continue to work.
+I would like to share that I had no prior experience with web services and REST APIs before this project. This was my first time using frameworks like Flask and SQLAlchemy. After recieving the assignment from Neuroflow on 11/19, I spent the first day educating myself on what REST APIs are and how to go about building one in Python. After going through a few tutorials and a lot of documentation, I began working on this project on 11/20 and as I got more comfortable with REST concepts and Flask, I was able to build the specified API a lot faster than I had anticipated, given that I had no clue what a REST API was three days ago. I haven't done extensive testing on the system, but I've ensured that all of the core funtionality required of the system does and will continue to work. Feel free to run and modify the accompanying `test.py` file in order to test the API using the requests library. 
 
-There were definitely shortcuts taken in order to complete the assignment, and those shortcuts would be disastrous if implemeneted on a production web service. 
+There were definitely shortcuts taken in order to complete the assignment, and those shortcuts would be disastrous if implemented on a real, production web service. 
 
-   For instance, the way the system maintains the data for each user's moods is not ideal. The program stores each users' list of moods in a csv file, line by line for each user. So the user with an id of 2 has his moods stored in line 2 of the csv file, with each mood separated by a comma. This tends to bug out when it comes to deleting users and updating the csv file afterwards. 
+   For instance, the way the system maintains the data for each user's moods is not ideal. The program stores each users' list of moods in a csv file, line by line for each user. So, the user with an id of 2 has its moods stored in line 2 of the csv file, with each mood separated by a comma. This tends to bug out when it comes to deleting users and updating the csv file afterwards. 
 
    This could be circumvented if I fully implented a database to hold both the Users and the Moods. In that case, a primary key for the users can be used to reference moods stored in another table. The mood id would be linked the user id, and it would be simple to query and/or delete all moods for a given user. Depending on how the tables are linked, the moods could automatically be removed when a user is deleted and the tables casacade. 
 
