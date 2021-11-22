@@ -72,7 +72,7 @@ The following `curl` command returns that user's information in a JSON object:
     Content-Type: application/json
     Content-Length: 122
     Server Werkzeug/2.0.2 Python/3.9.2
-    Date: MOn, 22 Nov 2021 17:40:53 GMT
+    Date: Mon, 22 Nov 2021 17:40:53 GMT
     
     {
       "moods": [
@@ -166,5 +166,5 @@ For instance, the way the system maintains the data for each user's moods is not
 
 This could be circumvented if I fully implented a database to hold both the Users and the Moods. In that case, a primary key for the users can be used to reference moods stored in another table. The mood id would be linked the user id, and it would be simple to query and/or delete all moods for a given user. Depending on how the tables are linked, the moods could automatically be removed when a user is deleted and the tables casacade. 
 
-The streak functionality is also a bit finicky but it will work as expected for the most part. When a user is created, their streak is initially zero and timestamp of last POST request is null. When the user POSTs a mood, that timestamp is saved to the user and its streak is set to 1. From then on, whenenever the user POSTs a mood, that request's timestamp is compared with the most recent timestamp stored in the User model. If the difference between the new request and the most recent request are longer than 24 hours, the user's streak was broken and it gets reset to 1. If the new request was within 24 hours of the most recent request, the program checks to see if the new request is the next day after the most recent request. If this is true, then the streak is incremented. Otherwise, streak is left alone, and the user's timestamp is set to the timestamp of the new request.
+The streak functionality is also a bit finicky but it will work as expected for the most part. When a user is created, their streak is initially zero and timestamp of last POST request is null. When the user POSTs a mood, that timestamp is saved to the user and its streak is set to 1. From then on, whenever the user POSTs a mood, that request's timestamp is compared with the most recent timestamp stored in the User model. If the difference between the new request and the most recent request are longer than 24 hours, the user's streak was broken and it gets reset to 1. If the new request was within 24 hours of the most recent request, the program checks to see if the new request is the next day after the most recent request. If this is true, then the streak is incremented. Otherwise, streak is left alone, and the user's timestamp is set to the timestamp of the new request.
 
