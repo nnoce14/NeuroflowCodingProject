@@ -39,7 +39,7 @@ API Documentation
     If the request succeeds, a status code 200 is returned. The body of the response contains a JSON object with the requested user's username, streak,and the timestamp of this user's last POST request to /api/mood.<br>
     If the request fails, the status code 400 is returned.
     
-- DELETE **/api/users/&lt;id&gt;**
+- DELETE **/api/users/&lt;int:id&gt;**
 
     Use this request to delete a specified user.<br>
     If the request succeeds, the status code 200 is returned. The body of the response contains a success message that says true to indicate the action succeeded.<br>
@@ -160,11 +160,15 @@ You can delete a user from the database using the following `curl` command, whic
 Writeup/Disclaimer
 -------
 
-This REST api was built entirely for the purposes of a coding assessment from Neuroflow. It is in no way intended to be used for production services. There were definitely shortcuts taken in order to complete the assignment, and those shortcuts would be disastrous if implemeneted on a production web service.
+This REST api was built entirely for the purposes of a coding assessment from Neuroflow. It is in no way intended to be used for production services. 
 
-For instance, the way the system maintains the data for each user's moods is not ideal. The program stores each users' list of moods in a csv file, line by line for each user. So the user with an id of 2 has his moods stored in line 2 of the csv file, with each mood separated by a comma. This tends to bug out when it comes to deleting users and updating the csv file after this is done.
+I would like to share that I had no prior experience with web services and REST APIs before this project. This was my first time using frameworks like Flask and SQLAlchemy. After recieving the assignment from Neuroflow, I spent the first day educating myself on what REST APIs are and how to go about building one in Python. After going through a few tutorials and a lot of documentation, I began working on this project on 11/20 and as I got more comfortable with REST and Flask, I was able to build the specified API a lot faster than I had anticipated, granted that I had no clue what a REST API was three days ago. I haven't done extensive testing on the system, but I've ensured that all of the core funtionality required of the system does and will continue to work.
 
-This could be circumvented if I fully implented a database to hold both the Users and the Moods. In that case, a primary key for the users can be used to reference moods stored in another table. The mood id would be linked the user id, and it would be simple to query and/or delete all moods for a given user. Depending on how the tables are linked, the moods could automatically be removed when a user is deleted and the tables casacade. 
+There were definitely shortcuts taken in order to complete the assignment, and those shortcuts would be disastrous if implemeneted on a production web service. 
+
+    For instance, the way the system maintains the data for each user's moods is not ideal. The program stores each users' list of moods in a csv file, line by line for each user. So the user with an id of 2 has his moods stored in line 2 of the csv file, with each mood separated by a comma. This tends to bug out when it comes to deleting users and updating the csv file after this is done.
+
+    This could be circumvented if I fully implented a database to hold both the Users and the Moods. In that case, a primary key for the users can be used to reference moods stored in another table. The mood id would be linked the user id, and it would be simple to query and/or delete all moods for a given user. Depending on how the tables are linked, the moods could automatically be removed when a user is deleted and the tables casacade. 
 
 The streak functionality is also a bit finicky but it will work as expected for the most part. When a user is created, their streak is initially zero and timestamp of last POST request is null. When the user POSTs a mood, that timestamp is saved to the user and its streak is set to 1. From then on, whenever the user POSTs a mood, that request's timestamp is compared with the most recent timestamp stored in the User model. If the difference between the new request and the most recent request are longer than 24 hours, the user's streak was broken and it gets reset to 1. If the new request was within 24 hours of the most recent request, the program checks to see if the new request is the next day after the most recent request. If this is true, then the streak is incremented. Otherwise, streak is left alone, and the user's timestamp is set to the timestamp of the new request.
 
