@@ -75,9 +75,6 @@ The following `curl` command returns that user's information in a JSON object:
     Date: Mon, 22 Nov 2021 17:40:53 GMT
     
     {
-      "moods": [
-        "happy"
-      ],
       "streak": 1,
       "timestamp": "Mon, 22 Nov 2021 12:40:36 GMT",
       "username": "guest"
