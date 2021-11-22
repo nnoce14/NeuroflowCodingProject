@@ -72,13 +72,9 @@ The following `curl` command returns that user's information in a JSON object:
     Content-Type: application/json
     Content-Length: 122
     Server Werkzeug/2.0.2 Python/3.9.2
-    Date: Mon, 22 Nov 2021 17:40:53 GMT
+    Date: Mon, 22 Nov 2021 19:00:47 GMT
     
-    {
-      "streak": 1,
-      "timestamp": "Mon, 22 Nov 2021 12:40:36 GMT",
-      "username": "guest"
-    }
+    {"streak": 1,"timestamp": "Mon, 22 Nov 2021 14:00:22 GMT","username": "guest"}
 ```
 
 These credentials can now be used to access that user's moods:
@@ -86,15 +82,11 @@ These credentials can now be used to access that user's moods:
     $ curl -u guest:password -i -X GET http://127.0.0.1:5000/api/mood
     HTTP/1.0 200 OK
     Content-Type: application/json
-    Content-Length: 33
+    Content-Length: 20
     Server: Werkzeug/2.0.2, Python/3.9.2
-    Date: Mon, 22 Nov 2021 17:44:02 GMT
+    Date: Mon, 22 Nov 2021 19:02:36 GMT
     
-    {
-      "moods": [
-        "happy"
-      ]
-    }
+    {"moods":["happy"]}
     
 Using the wrong credentials the request is refused:
 
@@ -104,7 +96,7 @@ Using the wrong credentials the request is refused:
     Content-Length: 19
     WWW-Authenticate: Basic realm="Authentication Required"
     Server: Werkzeug/2.0.2 Python/3.9.2
-    Date: Mon, 22 Nov 2021 17:45:15 GMT
+    Date: Mon, 22 Nov 2021 19:03:50 GMT
     
     Unauthorized Access
     
@@ -118,11 +110,9 @@ The following `curl` command registers a new user with username `guest2` and pas
     Server: Werkzeug/2.0.2 Python/3.9.2
     Date: Mon, 22 Nov 2021 17:35:48 GMT
     
-    {
-      "username": "guest2"
-    }
-
+    {"username": "guest2"}
     
+ 
 The following `curl` command adds a new mood to a specified user, in this case `guest2`:
 
 ```
@@ -134,9 +124,7 @@ http://127.0.0.1:5000/api/mood
     Server: Werkzeug/2.0.2 Python/3.9.2
     Date: Mon, 22 Nov 2021 17:50:35 GMT
     
-    {
-      "mood": "sad"
-    }
+    {"mood": "sad"}
 ```
 
 You can delete a user from the database using the following `curl` command, which deletes user `guest2`:
@@ -149,9 +137,7 @@ You can delete a user from the database using the following `curl` command, whic
     Server: Werkzeug/2.0.2 Python/3.9.2
     Date: Mon, 22 Nov 2021 17:53:58 GMT
     
-    {
-      "success": true
-    }
+    {"success": true}
 ```
 
 Writeup/Disclaimer
